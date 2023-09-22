@@ -1,0 +1,73 @@
+version: '3'
+
+networks:
+  proxy:
+    external: true
+  db:
+    external: false
+  web:
+    external: false    
+    
+services:
+  tailoringexpert-db:
+    build: ./db
+    image: tailoringexpert/db
+    container_name: tailoringexpert-db
+    hostname: db.tailoringexpert
+    ports:
+      - '3306:3306'
+    networks:
+      - db       
+    volumes:
+      - db_data:/bitnami/mariadb/data
+    environment:
+      - MARIADB_ROOT_USER=${TAILORINGEPXERT_DB_ROOT_USER}
+      - MARIADB_ROOT_PASSWORD=${TAILORINGEPXERT_DB_ROOT_PASSWORD}
+      - MARIADB_SKIP_TEST_DB=yes 
+    healthcheck:
+      test: ['CMD', '/opt/bitnami/scripts/mariadb/healthcheck.sh']
+      interval: 15s
+      timeout: 5s
+      retries: 6    
+    
+  tailoringexpert-web:
+    build: ./web
+    image: tailoringexpert/web
+    container_name: tailoringexpert-web
+    hostname: web.tailoringexpert    
+    networks:
+      - proxy
+      - web   
+    environment:
+      - APACHE_HTTP_PORT_NUMBER=${TAILORINGEXPERT_APACHE_HTTP_PORT_NUMBER}
+      - APACHE_HTTPS_PORT_NUMBER=${TAILORINGEXPERT_APACHE_HTTPS_PORT_NUMBER}
+      - APACHE_SERVER_NAME=${TAILORINGEXPERT_DOMAIN}
+      - APP_TENANT=${TAILORINGEPXERT_DEFAULT_TENANT}
+      - APP_SERVER_PORT=${TAILORINGEPXERT_APP_SERVER_PORT}
+      - APP_SERVER_PROTOCOL=${TAILORINGEPXERT_APP_SERVER_PROTOCOL}
+    labels:
+      traefik.enable: true
+      traefik.docker.network: proxy
+      traefik.frontend.rule: Host:${TAILORINGEXPERT_DOMAIN}
+      traefik.http.routers.tailoringexpert-web.rule: Host(`${TAILORINGEXPERT_DOMAIN}`)
+      traefik.http.routers.tailoringexpert-web.entrypoints: https
+      traefik.http.routers.tailoringexpert-web.tls: true
+      traefik.http.services.tailoringexpert-web.loadbalancer.server.port: ${TAILORINGEXPERT_APACHE_HTTP_PORT_NUMBER}
+      traefik.http.services.tailoringexpert-web.loadbalancer.server.scheme: http 
+  tailoringexpert-app:
+    build: ./app
+    image: tailoringexpert/app
+    container_name: tailoringexpert-app
+    hostname: app.tailoringexpert
+    networks:
+      - db
+      - web     
+    tty: true
+  # restart: unless-stopped
+    environment:
+      - SERVER_PORT=${TAILORINGEPXERT_APP_SERVER_PORT}
+      - SERVER_HTTP_PORT=${TAILORINGEPXERT_APP_SERVER_PORT} 
+      - SSL_ENABLED=${TAILORINGEPXERT_APP_SERVER_SSL} 
+  
+volumes:
+  db_data: 
