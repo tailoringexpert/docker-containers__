@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>eu.tailoringexpert</groupId>
+  <artifactId>docker-containers</artifactId>
+  <packaging>pom</packaging>
+  <name>${project.groupId}:${project.artifactId}</name>
+  <version>0.0.1-SNAPSHOT</version>
+
+  <inceptionYear>2023</inceptionYear>
+
+  <organization>
+    <name>Michael Bädorf and others</name>
+    <url>https://www.tailoringexpert.eu</url>
+  </organization>
+
+  <developers>
+    <developer>
+      <name>Michael Baedorf</name>
+      <email>tailoringexpert@michael-baedorf.de</email>
+    </developer>
+  </developers>
+
+  <licenses>
+    <license>
+      <name>Apache License 2.0</name>
+      <url>https://www.apache.org/licenses/LICENSE-2.0.html</url>
+    </license>
+  </licenses>
+
+  <scm>
+    <connection>scm:git:https://github.com/tailoringexpert/docker-containers.git</connection>
+    <developerConnection>scm:git:https://github.com/tailoringexpert/docker-containers.git</developerConnection>
+    <url>https://github.com/tailoringexpert/docker-containers</url>
+    <tag>HEAD</tag>
+  </scm>
+
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <gitflow-maven-plugin.version>1.20.0</gitflow-maven-plugin.version>
+  </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>com.amashchenko.maven.plugin</groupId>
+        <artifactId>gitflow-maven-plugin</artifactId>
+        <version>${gitflow-maven-plugin.version}</version>
+        <configuration>
+          <verbose>true</verbose>
+          <featureSquash>true</featureSquash>
+          <gitFlowConfig>
+            <productionBranch>main</productionBranch>
+            <developmentBranch>develop</developmentBranch>
+            <featureBranchPrefix>feature/</featureBranchPrefix>
+            <releaseBranchPrefix>release/</releaseBranchPrefix>
+            <hotfixBranchPrefix>hotfix/</hotfixBranchPrefix>
+            <supportBranchPrefix>support/</supportBranchPrefix>
+            <versionTagPrefix>v</versionTagPrefix>
+            <origin>origin</origin>
+          </gitFlowConfig>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>

@@ -1,0 +1,11 @@
+version: '3'
+    
+services:
+  mvn:
+    build: .
+    image: tailoringexpert/doorstop
+    hostname: doorstop    
+    container_name: doorstop
+    #restart: unless-stopped
+    #volumes:
+    #  - /home/jenkins/.gnupg:/.gnupg
