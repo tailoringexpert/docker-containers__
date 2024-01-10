@@ -1,0 +1,11 @@
+version: '3'
+    
+services:
+  mvn:
+    build: .
+    image: tailoringexpert/mvn-openjdk-17
+    hostname: mvn    
+    container_name: mvn
+    #restart: unless-stopped
+    volumes:
+      - /home/jenkins/.gnupg:/.gnupg
